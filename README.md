@@ -23,9 +23,28 @@ the setup skill writes.
 `hooks/git-workflow-guard.sh --mode <dir>` prints the mode for a folder: `pr`, `hands-on`, `unset`, or
 `pr (no CLAUDE.md marker)`.
 
+## Mode display
+
+A band above the prompt shows the session repo's mode, folder and branch, and how many commands the guard allowed
+(✓), asked about (?) and denied (✗) this session:
+
+```
+pr · my-app · feat/12-search   ✓ 3  ? 1                                  guards   show rules
+```
+
+`guards` lists the recent decisions and `show rules` what the mode allows, asks and never does. 
+`/git-workflow rules` and `/git-workflow guards` print the same as text (`/git-workflow` or `/git-workflow setup` runs setup).
+
+The **Mode display** setting picks where it shows: `band` (the default) or `hint`, a one-line summary at the end of
+the hint line under the prompt. Change it with `/plugin configure git-workflow@amierlorenz`.
+
+The display uses Claude Code's early-access function hooks (`hooks/register.tsx`). The guard is a plain command hook
+and works without it.
+
 ## Developing
 
-`bash hooks/git-workflow-guard.test.sh` runs the guard against throwaway repos and prints one line per case.
+- `bash hooks/git-workflow-guard.test.sh` runs the guard against throwaway repos and prints one line per case.
+- `claude plugin test .` runs the display's tests (`tests/`).
 
 ## Uninstall
 

@@ -21,6 +21,8 @@ by a PreToolUse hook. Listed in the [`amierlorenz/skills`](https://github.com/am
   marketplace copy and check that `claude plugin list` shows it enabled (`validate` passes configs that fail to load).
 - The guard uses only the stable hooks API. Anything on the early-access function-hooks API (`modules`) must fail
   without affecting the guard.
+- Display changes (`hooks/register.tsx`, `hooks/display.ts`): `claude plugin test .` must pass. A changed field in a
+  saved value gets a new `shape` tag, with a test that the old value is declined.
 - Every change names its source in the PR: the Claude Code plugin or hooks docs, or a linked observed failure.
   No source: call it a proposal.
 
