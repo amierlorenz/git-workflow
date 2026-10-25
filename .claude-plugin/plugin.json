@@ -7,5 +7,15 @@
   },
   "repository": "https://github.com/amierlorenz/git-workflow",
   "keywords": ["git", "workflow", "hooks", "pull-requests"],
-  "license": "MIT"
+  "license": "MIT",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "style": {
+      "type": "string",
+      "title": "Mode display",
+      "description": "band: a row above the prompt with guards and show rules buttons. hint: one line at the end of the hint line under the prompt.",
+      "options": ["band", "hint"],
+      "default": "band"
+    }
+  }
 }
