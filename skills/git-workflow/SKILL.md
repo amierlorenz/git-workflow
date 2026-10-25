@@ -4,7 +4,7 @@ description: Set up or change a project's git workflow mode (hands-on or pr). Us
 ---
 
 The mode lives in the project's `.claude/settings.local.json` as `env.CLAUDE_GIT_WORKFLOW`.
-`~/.claude/hooks/git-workflow-guard.sh` reads it on every commit, push and `gh pr create`.
+The plugin's guard hook reads it from the target repo on every commit, push and `gh pr create`.
 
 ## 1. Check current state
 
@@ -42,7 +42,7 @@ Cloud sessions (`/autofix-pr`) never see `~/.claude`, so the rules must live in 
 
 ```markdown
 ## Git workflow (pr mode)
-<!-- git-workflow:pr — checked by ~/.claude/hooks/git-workflow-guard.sh; keep this marker -->
+<!-- git-workflow:pr — checked by the git-workflow plugin's guard hook; keep this marker -->
 - Never commit to main, never merge a PR, never force-push. If a branch falls behind main, merge main into it.
 - One branch per issue or feature: `feat/<issue#>-<slug>`, `fix/<issue#>-<slug>`.
 - Conventional Commits 1.0.0, subject line only unless the why isn't obvious from the diff.
