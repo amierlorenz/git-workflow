@@ -7,7 +7,10 @@ Pick a git workflow per repo and have a hook enforce it on every `git commit`, `
 
 In both modes `gh pr merge` and force-pushes are denied.
 
+In Claude Code (the plugin is listed in the [`amierlorenz/skills`](https://github.com/amierlorenz/skills) marketplace):
+
 ```
+/plugin marketplace add amierlorenz/skills
 /plugin install git-workflow@amierlorenz
 /git-workflow          # pick the mode for the repo you're in
 ```

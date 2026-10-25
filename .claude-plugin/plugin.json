@@ -5,7 +5,7 @@
     "name": "Amier",
     "url": "https://github.com/amierlorenz"
   },
-  "repository": "https://github.com/amierlorenz/skills",
+  "repository": "https://github.com/amierlorenz/git-workflow",
   "keywords": ["git", "workflow", "hooks", "pull-requests"],
   "license": "MIT"
 }
