@@ -1,0 +1,15 @@
+{
+  "name": "git-workflow-ui-prototype",
+  "version": "0.1.0",
+  "description": "PROTOTYPE, throw away: where to show the git workflow mode, switched with /gw-ui.",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "style": {
+      "type": "string",
+      "title": "Git mode display",
+      "description": "band: a row above the prompt with show rules and guards buttons. hint: one line in the hint line under the prompt.",
+      "options": ["band", "hint"],
+      "default": "band"
+    }
+  }
+}
