@@ -75,7 +75,8 @@ repo_mode "$dir"
 [ -n "$marked" ] ||
   decide deny "pr mode is set but the repo CLAUDE.md has no git-workflow:pr section. Run the git-workflow skill setup first."
 
-branch=$(git -C "$root" rev-parse --abbrev-ref HEAD 2>/dev/null)
+# symbolic-ref names an unborn branch (a new repo's main) too; rev-parse would say HEAD.
+branch=$(git -C "$root" symbolic-ref --short -q HEAD || git -C "$root" rev-parse --abbrev-ref HEAD 2>/dev/null)
 
 if [[ "$branch" =~ ^(main|master)$ ]] || grep -qE "${P}git(${C})? push.*[ :](main|master)( |\$)" <<<"$cmd"; then
   decide ask "pr mode: direct changes to main need your yes."
