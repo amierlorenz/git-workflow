@@ -1,10 +1,10 @@
 import type { EngineInterface, Register } from 'claude-code'
 
 // Shows the git workflow mode of the repo the session is in, as the guard resolves it.
-async function show($: EngineInterface) {
+async function show($: EngineInterface, cwd?: string) {
   try {
     const guard = `${$.plugin.root}/hooks/git-workflow-guard.sh`
-    const { stdout } = await $.process.run([guard, '--mode', await $.session.cwd()])
+    const { stdout } = await $.process.run([guard, '--mode', cwd ?? (await $.session.cwd())])
     const mode = stdout.trim()
     $.ui.status(mode ? `git: ${mode}` : undefined)
   } catch {
@@ -27,6 +27,12 @@ export const register: Register = on => {
   on('tool.call', { tool: 'Bash' }, async ($, e, next) => {
     const result = await next(e)
     await show($)
+    return result
+  }).catch(($, e, next) => next(e))
+  // The session's cwd moves after the Bash call that cd'd, so redraw from the event's new directory.
+  on('classic.CwdChanged', async ($, e, next) => {
+    const result = await next(e)
+    await show($, e.new_cwd)
     return result
   }).catch(($, e, next) => next(e))
 }
