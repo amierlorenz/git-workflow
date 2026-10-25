@@ -7,11 +7,15 @@
 repo_mode() { # $1 = dir; sets root, mode (pr|hands-on|unset, empty outside a repo) and marked
   root=$(git -C "$1" rev-parse --show-toplevel 2>/dev/null) mode= marked=
   [ -n "$root" ] || return
-  # A worktree lacks the gitignored settings file, so fall back to the main checkout's.
+  # The settings file is gitignored, so a worktree's may lack the mode (or hold only other keys like
+  # attribution): fall back to the main checkout's.
   local main f
   main=$(dirname "$(git -C "$root" rev-parse --path-format=absolute --git-common-dir)")
-  for f in "$root" "$main"; do [ -f "$f/.claude/settings.local.json" ] && break; done
-  mode=$(jq -r '.env.CLAUDE_GIT_WORKFLOW // "unset"' "$f/.claude/settings.local.json" 2>/dev/null || echo unset)
+  for f in "$root" "$main"; do
+    mode=$(jq -r '.env.CLAUDE_GIT_WORKFLOW // empty' "$f/.claude/settings.local.json" 2>/dev/null)
+    [ -n "$mode" ] && break
+  done
+  mode=${mode:-unset}
   # Cloud sessions (/autofix-pr) only see the repo's CLAUDE.md, so pr mode needs the rules in it.
   grep -qs 'git-workflow:pr' "$root/CLAUDE.md" "$root/.claude/CLAUDE.md" && marked=1
 }
