@@ -11,6 +11,9 @@ cp p-pr/CLAUDE.md "p space/CLAUDE.md"
 git -C p-none switch -q main
 # A worktree has the tracked CLAUDE.md but not the gitignored settings.local.json.
 git -C p-pr add CLAUDE.md && git -C p-pr commit -qm docs && git -C p-pr worktree add -q -b feat/2-y "$PWD/wt"
+# A worktree whose own settings file holds other keys (attribution) but no mode still inherits it.
+git -C p-pr worktree add -q -b feat/3-z "$PWD/wt-attr"
+mkdir wt-attr/.claude && echo '{"attribution":{"commit":""}}' > wt-attr/.claude/settings.local.json
 mkdir outside p-pr/sub
 t() { # project, command, expected
   out=$(jq -n --arg c "$2" --arg w "$PWD/$1" '{tool_input:{command:$c},cwd:$w}' | CLAUDE_PROJECT_DIR="$PWD/$1" $H | jq -r '.hookSpecificOutput.permissionDecision')
@@ -44,6 +47,7 @@ t outside 'cd /nonexistent && git commit -m x' ask
 t p-pr "cd $PWD/p-none && git commit -m x" ask
 t p-pr/sub 'git commit -m x' allow
 t wt 'git commit -m x' allow
+t wt-attr 'git commit -m x' allow
 # Bug 2: a leading cd plus one git/gh command is not compound; anything more still is.
 t p-pr "cd \"$PWD/p space\" && git commit -m \"feat: x\"" allow
 t p-pr "cd $PWD/p-pr && env -u GH_TOKEN gh pr create --fill" allow
@@ -61,6 +65,7 @@ m() { # dir, expected
   printf '%s --mode %-9s -> %s\n' $s "$1" "$out"; }
 m p-pr/sub pr
 m wt pr
+m wt-attr pr
 m p-nomark 'pr (no CLAUDE.md marker)'
 m p-none unset
 m outside ''
