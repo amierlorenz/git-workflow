@@ -36,7 +36,7 @@ pr · my-app · feat/12-search   ✓ 3  ? 1                                  gua
 `/git-guards` print the same as text.
 
 The **Mode display** setting picks where it shows: `band` (the default) or `hint`, a one-line summary at the end of
-the hint line under the prompt. Choose it when installing, or later in `/config`.
+the hint line under the prompt. Change it with `/plugin configure git-workflow@amierlorenz`.
 
 The display uses Claude Code's early-access function hooks (`hooks/register.tsx`). The guard is a plain command hook
 and works without it.
