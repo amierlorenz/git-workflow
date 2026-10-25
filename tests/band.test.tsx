@@ -58,6 +58,31 @@ test('the band shows mode, folder, branch and the guard counts, on terminal and 
   }
 })
 
+test('/git-workflow rules and guards answer from the display; anything else runs setup', async ($, on) => {
+  engine(on)
+  // Beneath the plugin: stands for the setup skill.
+  on('command.run', () => ({ text: 'setup skill' }))
+  await $.session.start({ cwd: '/work/app', surface: 'terminal', isInteractive: true })
+  await $.tool.call({ tool: 'Bash', command: 'git push origin main' })
+
+  const run = async (command: string, args: string) =>
+    (
+      await $.command.run({
+        command,
+        args,
+        origin: { kind: 'composer' },
+        presentation: { isFullscreen: false, columns: 100 },
+      })
+    ).text
+
+  for (const command of ['git-workflow', 'git-workflow:git-workflow']) {
+    expect(await run(command, 'rules')).toContain('main            commit, push, PR: ask')
+    expect(await run(command, ' guards ')).toContain('git push origin main')
+    expect(await run(command, '')).toBe('setup skill')
+  }
+  expect(await run('other', 'rules')).toBe('setup skill')
+})
+
 test("another plugin's band is drawn below, not replaced", async ($, on) => {
   engine(on)
   on('ui.render', ($, e) => {

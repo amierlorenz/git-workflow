@@ -60,19 +60,20 @@ export const register: Register = (on, options) => {
 
   on('session.start', async ($, e, next) => {
     const result = await next(e)
-    await $.command.register({ name: 'git-rules', description: 'What the current git workflow mode allows, asks and never does' })
-    await $.command.register({ name: 'git-guards', description: "This session's git guard decisions" })
     await update($, panel, () => null)
     await refresh($)
     return result
   })
 
-  on('command.run', { command: 'git-rules' }, async $ => {
+  // `/git-workflow rules` and `/git-workflow guards` are answered here; anything else runs the setup skill.
+  on('command.run', async ($, e, next) => {
+    if (e.command !== 'git-workflow' && e.command !== 'git-workflow:git-workflow') return next(e)
+    const arg = e.args.trim()
+    if (arg === 'guards') return { text: guardsText(await read($, decisions)) }
+    if (arg !== 'rules') return next(e)
     const now = await read($, info)
     return { text: now ? rulesText(now) : 'Not in a git repo.' }
-  })
-
-  on('command.run', { command: 'git-guards' }, async $ => ({ text: guardsText(await read($, decisions)) }))
+  }).catch(($, e, next) => next(e))
 
   // A prompt covers mode changes made outside the session.
   on('prompt.submit', async ($, e, next) => {
