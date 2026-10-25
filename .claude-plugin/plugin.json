@@ -1,0 +1,11 @@
+{
+  "name": "git-workflow",
+  "description": "Per-repo git workflow modes (hands-on or pr), enforced by a hook on every commit, push and PR.",
+  "author": {
+    "name": "Amier",
+    "url": "https://github.com/amierlorenz"
+  },
+  "repository": "https://github.com/amierlorenz/skills",
+  "keywords": ["git", "workflow", "hooks", "pull-requests"],
+  "license": "MIT"
+}
