@@ -15,6 +15,8 @@ git -C p-pr add CLAUDE.md && git -C p-pr commit -qm docs && git -C p-pr worktree
 git -C p-pr worktree add -q -b feat/3-z "$PWD/wt-attr"
 mkdir wt-attr/.claude && echo '{"attribution":{"commit":""}}' > wt-attr/.claude/settings.local.json
 mkdir outside p-pr/sub
+# A new pr repo before its first commit: HEAD is an unborn main.
+mkdir -p p-new/.claude && git -C p-new init -q -b main && cp p-pr/.claude/settings.local.json p-new/.claude/ && cp p-pr/CLAUDE.md p-new/
 t() { # project, command, expected
   out=$(jq -n --arg c "$2" --arg w "$PWD/$1" '{tool_input:{command:$c},cwd:$w}' | CLAUDE_PROJECT_DIR="$PWD/$1" $H | jq -r '.hookSpecificOutput.permissionDecision')
   out=${out:-none}; [ "$out" = "$3" ] && s=PASS || { s=FAIL; fails=$((fails+1)); }
@@ -48,6 +50,7 @@ t p-pr "cd $PWD/p-none && git commit -m x" ask
 t p-pr/sub 'git commit -m x' allow
 t wt 'git commit -m x' allow
 t wt-attr 'git commit -m x' allow
+t p-new 'git commit -m "docs: x"' ask
 # Bug 2: a leading cd plus one git/gh command is not compound; anything more still is.
 t p-pr "cd \"$PWD/p space\" && git commit -m \"feat: x\"" allow
 t p-pr "cd $PWD/p-pr && env -u GH_TOKEN gh pr create --fill" allow
