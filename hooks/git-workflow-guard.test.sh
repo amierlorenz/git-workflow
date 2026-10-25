@@ -36,7 +36,8 @@ t "p space" "git -C \"$PWD/p space\" commit -m x" allow
 t p-pr "git -C $PWD/p-none commit -m x" ask
 # Bug 1: mode, marker and branch come from the repo the command targets, not the session's start folder.
 t outside "cd $PWD/p-pr && git commit -m x" allow
-t outside "cd p-pr && git commit -m x" allow
+t outside "cd ../p-pr && git commit -m x" allow
+t outside "cd ../p-pr && git -C sub commit -m x" allow
 t outside "git -C $PWD/p-pr commit -m x" allow
 t outside 'git commit -m x' ask
 t outside 'cd /nonexistent && git commit -m x' ask
@@ -49,9 +50,19 @@ t p-pr "cd $PWD/p-pr && env -u GH_TOKEN gh pr create --fill" allow
 t p-pr "cd $PWD/p-pr && git push origin main" ask
 t p-pr "cd $PWD/p-pr && git add a && git commit -m x" ask
 t p-pr "cd $PWD/p-pr && git commit -m x; echo hi" ask
+t p-pr 'cd $(echo .) && git commit -m x' ask
 # Bug 3: force flags count only inside the push command's own segment.
 t p-pr 'git push -q -u origin feat/1-x && gh api -f mode=gfm /markdown' ask
 t p-pr 'git push --force origin feat/1-x && echo done' deny
 t p-pr "cd $PWD/p-pr && git push -f" deny
+# --mode, read by the status indicator, resolves the repo the same way.
+m() { # dir, expected
+  out=$($H --mode "$PWD/$1"); [ "$out" = "$2" ] && s=PASS || { s=FAIL; fails=$((fails+1)); }
+  printf '%s --mode %-9s -> %s\n' $s "$1" "$out"; }
+m p-pr/sub pr
+m wt pr
+m p-nomark 'pr (no CLAUDE.md marker)'
+m p-none unset
+m outside ''
 echo "failures: $fails"
 [ "$fails" = 0 ]
