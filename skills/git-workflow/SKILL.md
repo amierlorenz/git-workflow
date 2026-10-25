@@ -1,13 +1,13 @@
 ---
 name: git-workflow
 description: Set up or change a project's git workflow mode (hands-on or pr). Use before the first commit in a project whose .claude/settings.local.json has no env.CLAUDE_GIT_WORKFLOW, when the git-workflow-guard hook denies a commit for a missing setup, or when the user invokes /git-workflow or asks to switch modes.
-argument-hint: "[rules | guards]"
+argument-hint: "[setup | rules | guards]"
 ---
 
 The mode lives in the project's `.claude/settings.local.json` as `env.CLAUDE_GIT_WORKFLOW`.
 The plugin's guard hook reads it from the target repo on every commit, push and `gh pr create`.
 
-`rules` and `guards` arguments are answered by the plugin's mode display before this skill runs. If they reach you,
+No argument or `setup`: run the steps below. `rules` and `guards` arguments are answered by the plugin's mode display before this skill runs. If they reach you,
 the display isn't loaded (it needs Claude Code's function hooks): say so, and for `rules` run the guard script with
 `--mode .` and describe that mode from step 2.
 

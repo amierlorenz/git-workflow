@@ -79,6 +79,7 @@ test('/git-workflow rules and guards answer from the display; anything else runs
     expect(await run(command, 'rules')).toContain('main            commit, push, PR: ask')
     expect(await run(command, ' guards ')).toContain('git push origin main')
     expect(await run(command, '')).toBe('setup skill')
+    expect(await run(command, 'setup')).toBe('setup skill')
   }
   expect(await run('other', 'rules')).toBe('setup skill')
 })

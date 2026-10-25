@@ -33,7 +33,7 @@ pr · my-app · feat/12-search   ✓ 3  ? 1                                  gua
 ```
 
 `guards` lists the recent decisions and `show rules` what the mode allows, asks and never does. 
-`/git-workflow rules` and `/git-workflow guards` print the same as text (plain `/git-workflow` runs setup).
+`/git-workflow rules` and `/git-workflow guards` print the same as text (`/git-workflow` or `/git-workflow setup` runs setup).
 
 The **Mode display** setting picks where it shows: `band` (the default) or `hint`, a one-line summary at the end of
 the hint line under the prompt. Change it with `/plugin configure git-workflow@amierlorenz`.
