@@ -13,13 +13,12 @@ In both modes `gh pr merge` and force-pushes are denied.
 ```
 
 The mode lives in the repo's `.claude/settings.local.json` (`env.CLAUDE_GIT_WORKFLOW`). The hook reads it from the
-repo the command targets (`git -C <dir>`, a leading `cd <dir> &&`, else the session's folder); in a worktree it falls
-back to the main checkout's file. pr mode also needs the `git-workflow:pr` marker in the repo's `CLAUDE.md`, which
+repo the command targets (`git -C <dir>`, a leading `cd <dir> &&`, else the session's folder); a worktree without its
+own mode uses the main checkout's. pr mode also needs the `git-workflow:pr` marker in the repo's `CLAUDE.md`, which
 the setup skill writes.
 
-The current mode shows under the prompt as `git: hands-on`, `git: pr` or `git: unset`. It updates after each Bash
-command and each prompt. This uses Claude Code's function hooks (`hooks/register.ts`), an early-access API; the
-guard itself is a plain command hook and doesn't depend on it.
+`hooks/git-workflow-guard.sh --mode <dir>` prints the mode for a folder: `pr`, `hands-on`, `unset`, or
+`pr (no CLAUDE.md marker)`.
 
 ## Developing
 
